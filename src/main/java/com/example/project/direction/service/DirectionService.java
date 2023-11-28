@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DirectionService {
-
     private static final int MAX_SEARCH_COUNT = 3;
     private static final double RADIUS_KM = 10.0;
 
