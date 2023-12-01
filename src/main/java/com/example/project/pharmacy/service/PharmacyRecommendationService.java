@@ -12,38 +12,39 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PharmacyRecommendationService {
+
+    private static final String ROAD_VIEW_BASE_URL = "https://map.kakao.com/link/roadview/";
 
     private final KakaoAddressSearchService kakaoAddressSearchService;
     private final DirectionService directionService;
     private final Base62Service base62Service;
 
-    private static final String ROAD_VIEW_BASE_URL = "https://map.kakao.com/link/roadview/";
-
     @Value("${pharmacy.recommendation.base.url}")
     private String baseUrl;
 
     public List<OutputDto> recommendPharmacyList(String address) {
+
         KakaoApiResponseDto kakaoApiResponseDto = kakaoAddressSearchService.requestAddressSearch(address);
 
-        if(Objects.isNull(kakaoApiResponseDto) || CollectionUtils.isEmpty(kakaoApiResponseDto.getDocumentList())) {
-            log.error("[PharmacyRecommendationService recommendPharmacyList fail] Input address: {}", address);
+        if (Objects.isNull(kakaoApiResponseDto) || CollectionUtils.isEmpty(kakaoApiResponseDto.getDocumentList())) {
+            log.error("[PharmacyRecommendationService.recommendPharmacyList fail] Input address: {}", address);
             return Collections.emptyList();
         }
 
         DocumentDto documentDto = kakaoApiResponseDto.getDocumentList().get(0);
 
         List<Direction> directionList = directionService.buildDirectionList(documentDto);
+        //List<Direction> directionList = directionService.buildDirectionListByCategoryApi(documentDto);
 
         return directionService.saveAll(directionList)
                 .stream()

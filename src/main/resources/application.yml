@@ -41,7 +41,9 @@ pharmacy:
   recommendation:
     base:
       url: http://localhost:8080/dir/
+
 ---
+
 spring:
   config:
     activate:

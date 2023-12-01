@@ -11,7 +11,7 @@ import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import spock.lang.Specification
+import reactor.core.Exceptions
 
 class KakaoAddressSearchServiceRetryTest extends AbstractIntegrationContainerBaseTest {
 

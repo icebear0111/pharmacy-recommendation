@@ -2,8 +2,8 @@ package com.example.project.api.service;
 
 import com.example.project.api.dto.KakaoApiResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,7 +32,6 @@ public class KakaoAddressSearchService {
             maxAttempts = 2,
             backoff = @Backoff(delay = 2000)
     )
-
     public KakaoApiResponseDto requestAddressSearch(String address) {
 
         if(ObjectUtils.isEmpty(address)) return null;
@@ -40,10 +39,10 @@ public class KakaoAddressSearchService {
         URI uri = kakaoUriBuilderService.buildUriByAddressSearch(address);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.AUTHORIZATION, "KakaoAK " + kakaoRestApiKey);
+        headers.set(HttpHeaders.AUTHORIZATION, "KakaoAK " +kakaoRestApiKey);
         HttpEntity httpEntity = new HttpEntity<>(headers);
 
-        //kakao api 호출
+        // kakao api 호출
         return restTemplate.exchange(uri, HttpMethod.GET, httpEntity, KakaoApiResponseDto.class).getBody();
     }
 
@@ -52,4 +51,5 @@ public class KakaoAddressSearchService {
         log.error("All the retries failed. address: {}, error: {}", address, e.getMessage());
         return null;
     }
+
 }

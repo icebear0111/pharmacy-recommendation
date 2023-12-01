@@ -8,7 +8,7 @@ class KakaoAddressSearchServiceTest extends AbstractIntegrationContainerBaseTest
     @Autowired
     private KakaoAddressSearchService kakaoAddressSearchService
 
-    def "address parameter is null, requestAddressSearch method returns null."() {
+    def "address 파라미터 값이 null이면, requestAddressSearch 메소드는 null을 리턴한다."() {
         given:
         def address = null
 
@@ -19,7 +19,7 @@ class KakaoAddressSearchServiceTest extends AbstractIntegrationContainerBaseTest
         result == null
     }
 
-    def "address is valid, requestAddressSearch method returns valid document."() {
+    def "주소값이 valid하다면, requestAddressSearch 메소드는 정상적으로 document를 반환한다."() {
         given:
         def address = "서울 성북구 종암로 10길"
 
@@ -32,7 +32,9 @@ class KakaoAddressSearchServiceTest extends AbstractIntegrationContainerBaseTest
         result.documentList.get(0).addressName != null
     }
 
-    def "address to latitude and longitude convert success"() {
+
+    def "정상적인 주소를 입력했을 경우, 정상적으로 위도 경도로 변환 된다."() {
+
         given:
         boolean actualResult = false
 

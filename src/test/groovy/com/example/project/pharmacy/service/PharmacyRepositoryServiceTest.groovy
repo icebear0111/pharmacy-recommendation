@@ -11,14 +11,13 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
     private PharmacyRepositoryService pharmacyRepositoryService
 
     @Autowired
-    PharmacyRepository pharmacyRepository
+    private PharmacyRepository pharmacyRepository
 
-    void setup() {
+    def setup() {
         pharmacyRepository.deleteAll()
     }
 
     def "PharmacyRepository update - dirty checking success"() {
-
         given:
         String inputAddress = "서울 특별시 성북구 종암동"
         String modifiedAddress = "서울 광진구 구의동"
@@ -28,6 +27,7 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
                 .pharmacyAddress(inputAddress)
                 .pharmacyName(name)
                 .build()
+
         when:
         def entity = pharmacyRepository.save(pharmacy)
         pharmacyRepositoryService.updateAddress(entity.getId(), modifiedAddress)
@@ -39,7 +39,6 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
     }
 
     def "PharmacyRepository update - dirty checking fail"() {
-
         given:
         String inputAddress = "서울 특별시 성북구 종암동"
         String modifiedAddress = "서울 광진구 구의동"
@@ -49,6 +48,7 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
                 .pharmacyAddress(inputAddress)
                 .pharmacyName(name)
                 .build()
+
         when:
         def entity = pharmacyRepository.save(pharmacy)
         pharmacyRepositoryService.updateAddressWithoutTransaction(entity.getId(), modifiedAddress)
@@ -58,7 +58,6 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
         then:
         result.get(0).getPharmacyAddress() == inputAddress
     }
-
 
     def "self invocation"() {
 
@@ -81,10 +80,10 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
         then:
         def e = thrown(RuntimeException.class)
         def result = pharmacyRepositoryService.findAll()
-        result.size() == 1
+        result.size() == 1 // 트랜잭션이 적용되지 않는다( 롤백 적용 X )
     }
 
-    def "transactional readOnly test"() {
+    def "transactional readOnly test - 읽기 전용일 경우 dirty checking 반영 되지 않는다. "() {
 
         given:
         String inputAddress = "서울 특별시 성북구"
